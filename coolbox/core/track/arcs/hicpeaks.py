@@ -12,6 +12,7 @@ class HiCPeaks(BEDPE):
         "open_region": True,
         "alpha": 0.6,
         "line_width": 5,
+        "expand": False,
     }
 
     def __init__(self, file, **kwargs):
