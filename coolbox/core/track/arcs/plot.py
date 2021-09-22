@@ -143,24 +143,22 @@ class PlotContacts(object):
 
         # Calculate the position and size of the box from loop's start and end postion.
         def pos_triangular(st1, ed1, st2, ed2):
-            m1 = (st1 + ed1) / 2
-            m2 = (st2 + ed2) / 2
-            x = (m1 + m2) / 2
-            y = x - m1
+            x = (ed1 + st2) / 2
+            y = x - ed1
             w = ((ed2 - st2) / 2) / math.cos(math.pi / 4)
             h = ((ed1 - st1) / 2) / math.cos(math.pi / 4)
             return x, y, (w, h)
 
         def pos_matrix_upper(st1, ed1, st2, ed2):
-            x = (st2 + ed2) / 2
-            y = (st1 + ed1) / 2
+            x = st2 
+            y = st1 
             w = ed2 - st2
             h = ed1 - st1
             return x, y, (w, h)
 
         def pos_matrix_lower(st1, ed1, st2, ed2):
-            x = (st1 + ed1) / 2
-            y = (st2 + ed2) / 2
+            x = st1 
+            y = st2 
             w = ed1 - st1
             h = ed2 - st2
             return x, y, (w, h)
@@ -194,6 +192,11 @@ class PlotContacts(object):
             (st1, ed1, st2, ed2) = loop.start1, loop.end1, loop.start2, loop.end2
             if hicmat_style in hicmat_tri_style:
                 x, y, (w, h) = pos_triangular(st1, ed1, st2, ed2)
+                if properties['expand']:
+                    x -= w
+                    y -= w
+                    w *= 3
+                    h *= 3
                 if y >= depth_limit:
                     continue
                 rec = Rectangle((x, y), w, h, angle=45, **plot_kwargs)
@@ -204,6 +207,11 @@ class PlotContacts(object):
                 if side in ('upper', 'both'):
                     # plot upper rectangle
                     x, y, (w, h) = pos_matrix_upper(st1, ed1, st2, ed2)
+                    if properties['expand']:
+                        x -= w
+                        y -= w
+                        w *= 3
+                        h *= 3    
                     rec = Rectangle((x, y), w, h, **plot_kwargs)
                     rec = set_alpha(rec)
                     ax.add_patch(rec)
@@ -211,6 +219,11 @@ class PlotContacts(object):
                 if side in ('lower', 'both'):
                     # plot lower rectangle
                     x, y, (w, h) = pos_matrix_lower(st1, ed1, st2, ed2)
+                    if properties['expand']:
+                        x -= w
+                        y -= w
+                        w *= 3
+                        h *= 3         
                     rec = Rectangle((x, y), w, h, **plot_kwargs)
                     rec = set_alpha(rec)
                     ax.add_patch(rec)
